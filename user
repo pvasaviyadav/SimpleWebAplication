@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+     <form action="data1">
+     Enter id : <input type="number" name="id"><br><br>
+     Enter name : <input type="text" name="name"><br><br>
+     Enter email : <input type="text" name="email"><br><br>
+     Enter password : <input type="number" name="password"><br><br>
+     <input type="submit">
+       </form>
+</body>
+</html>
+
+@WebServlet("/data1")
+public class UserServlet extends GenericServlet{
+	@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+		String id=req.getParameter("id");
+		String name=req.getParameter("name");
+		String email=req.getParameter("email");
+		String password=req.getParameter("password");
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/gnanasekhar","root","tiger");
+			PreparedStatement ps=con.prepareStatement("insert into user(id,name,email,password)values(?,?,?,?)");
+			ps.setInt(1, Integer.parseInt(id));
+			ps.setString(2, name);
+			ps.setString(3, email);
+			ps.setInt(4, Integer.parseInt(password));
+			ps.execute();
+		}catch(ClassNotFoundException | SQLException e) {
+			 e.printStackTrace();
+		}
+		PrintWriter pout=res.getWriter();
+		pout.print("user data inserted successfully");
+	}
+		
+	}

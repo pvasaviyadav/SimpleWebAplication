@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+    <form action="hi" method="post">
+    Enter to update id :<input type="number" name="id"><br><br>
+    Enter name :<input type="text" name="name"><br><br>
+    <input type="submit">
+      </form>
+</body>
+</html>
+
+@WebServlet("/hi")
+public class UpdateServlet extends HttpServlet{
+   @Override
+protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	String id=req.getParameter("id");
+	String name=req.getParameter("name");
+	try {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/gnanasekhar","root","tiger");
+		PreparedStatement ps=con.prepareStatement("update user set name=? where id=?");
+		ps.setString(1, name);
+		ps.setInt(2, Integer.parseInt(id));
+		ps.execute();
+	}catch(Exception e) {
+		e.printStackTrace();
+	}
+}
+}

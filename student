@@ -1,0 +1,40 @@
+# SimpleWebAplication#
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+    <form action="savestudent" method="post">
+        Enter id :<input type="number" name="id"><br><br>
+        Enter name :<input type="text" name="name"><br><br>
+        Enter age :<input type="number" name="age"><br><br>
+        <input type="submit">
+    </form>
+</body>
+</html>
+
+@WebServlet("/savestudent")
+public class StudentServlet extends HttpServlet{
+     @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	String id=req.getParameter("id");
+    	String name=req.getParameter("name");
+    	String age=req.getParameter("age");
+    	try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/gnanasekhar","root","tiger");
+			PreparedStatement ps=con.prepareStatement("insert into user1(id,name,age)values(?,?,?)");
+			ps.setInt(1, Integer.parseInt(id));
+			ps.setString(2, name);
+			ps.setInt(3, Integer.parseInt(age));
+			
+			ps.execute();
+		}catch(ClassNotFoundException | SQLException e) {
+			 e.printStackTrace();
+		}
+		PrintWriter pout=resp.getWriter();
+		pout.print("student data inserted successfully");
+    }
+}
